@@ -4,10 +4,9 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
-import tensorflow as tf
-
 model_path = 'model.h5'  # Ensure this is the correct relative or absolute path
 model = tf.keras.models.load_model(model_path)
+
 
 
 # Function to preprocess data
