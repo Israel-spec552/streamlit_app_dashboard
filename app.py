@@ -67,9 +67,6 @@ def run_app():
             st.write(f'Predictions: {predictions}')
             for i, sentiment in enumerate(predicted_sentiments):
                 st.write(f"Prediction {i + 1}: {sentiment} (Probability: {predictions[i][predicted_classes[i]]:.2f})")
-        
-        except Exception as e:
-            st.write(f"Error processing the features: {e}")
     else:
         st.write("Please upload a CSV file with numeric data.")
 
