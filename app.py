@@ -49,9 +49,7 @@ def run_app():
         if features is None:
             st.write("Please upload a CSV file with numeric data.")
 
-
-        # Make predictions
-    # Make predictions
+# Make predictions
 if st.button('Predict'):
     if features is not None:
         # Convert features to float32
@@ -65,9 +63,8 @@ if st.button('Predict'):
         sentiment_map = {0: 'Negative', 1: 'Positive'}
         predicted_sentiments = [sentiment_map[pred] for pred in predicted_classes]
 
-        st.write(f'Predictions: {predictions}')
-        for i, sentiment in enumerate(predicted_sentiments):
-            st.write(f"Prediction {i + 1}: {sentiment} (Probability: {predictions[i][predicted_classes[i]]:.2f})")
+        # Print the predicted sentiments
+        st.write(f'Predicted Sentiments: {predicted_sentiments}')
 
         # Calculate percentages of Negative and Positive predictions
         total_predictions = len(predicted_sentiments)
@@ -77,14 +74,15 @@ if st.button('Predict'):
         negative_percentage = (negative_count / total_predictions) * 100
         positive_percentage = (positive_count / total_predictions) * 100
 
+        # Print the percentages
         st.write(f'Negative Sentiment: {negative_percentage:.2f}%')
         st.write(f'Positive Sentiment: {positive_percentage:.2f}%')
 
         # Print the sentiment with the highest percentage
         if negative_percentage > positive_percentage:
-            st.write(f'Overall Sentiment: Negative ({negative_percentage:.2f}%)')
+            st.write(f'Overall Predicted Sentiment: Negative ({negative_percentage:.2f}%)')
         else:
-            st.write(f'Overall Sentiment: Positive ({positive_percentage:.2f}%)')
+            st.write(f'Overall Predicted Sentiment: Positive ({positive_percentage:.2f}%)')
 
     else:
         st.write("Please upload a CSV file with numeric data.")
