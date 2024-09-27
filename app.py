@@ -51,37 +51,23 @@ def run_app():
 
  # Make predictions
  if st.button('Predict'):
-    if features is not None:
-        # Convert features to float32
-        features = features.astype(np.float32)
-        predictions = model.predict(features)
+        if features is not None:
+            # Convert features to float32
+            features = features.astype(np.float32)
+            predictions = model.predict(features)
 
-        # Get the predicted sentiment (index of the maximum probability)
-        predicted_classes = np.argmax(predictions, axis=1)
+            # Get the predicted sentiment (index of the maximum probability)
+            predicted_classes = np.argmax(predictions, axis=1)
 
-        # Map 0 to 'Negative' and 1 to 'Positive'
-        sentiment_map = {0: 'Negative', 1: 'Positive'}
-        predicted_sentiments = [sentiment_map[pred] for pred in predicted_classes]
+            # Map 0 to 'Negative' and 1 to 'Positive'
+            sentiment_map = {0: 'Negative', 1: 'Positive'}
+            predicted_sentiments = [sentiment_map[pred] for pred in predicted_classes]
 
-        # Print the predicted sentiments
-        st.write(f'Predicted Sentiments: {predicted_sentiments}')
+            st.write(f'Predictions: {predictions}')
+            for i, sentiment in enumerate(predicted_sentiments):
+                st.write(f"Prediction {i + 1}: {sentiment} (Probability: {predictions[i][predicted_classes[i]]:.2f})")
+    else:
+        st.write("Please upload a CSV file with numeric data.")
 
-        # Calculate percentages of Negative and Positive predictions
-        total_predictions = len(predicted_sentiments)
-        negative_count = predicted_sentiments.count('Negative')
-        positive_count = predicted_sentiments.count('Positive')
-
-        negative_percentage = (negative_count / total_predictions) * 100
-        positive_percentage = (positive_count / total_predictions) * 100
-
-        # Print the percentages
-        st.write(f'Negative Sentiment: {negative_percentage:.2f}%')
-        st.write(f'Positive Sentiment: {positive_percentage:.2f}%')
-
-        # Print the sentiment with the highest percentage
-        if negative_percentage > positive_percentage:
-            st.write(f'Overall Predicted Sentiment: Negative ({negative_percentage:.2f}%)')
-        else:
-            st.write(f'Overall Predicted Sentiment: Positive ({positive_percentage:.2f}%)')
-
+run_app()
 run_app()
