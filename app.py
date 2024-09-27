@@ -84,8 +84,4 @@ if st.button('Predict'):
         else:
             st.write(f'Overall Predicted Sentiment: Positive ({positive_percentage:.2f}%)')
 
-    else:
-        st.write("Please upload a CSV file with numeric data.")
-
-
 run_app()
