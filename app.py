@@ -49,8 +49,8 @@ def run_app():
         if features is None:
             st.write("Please upload a CSV file with numeric data.")
 
- # Make predictions
- if st.button('Predict'):
+    # Make predictions
+    if st.button('Predict'):  # Correctly indented under run_app()
         if features is not None:
             # Convert features to float32
             features = features.astype(np.float32)
@@ -66,7 +66,8 @@ def run_app():
             st.write(f'Predictions: {predictions}')
             for i, sentiment in enumerate(predicted_sentiments):
                 st.write(f"Prediction {i + 1}: {sentiment} (Probability: {predictions[i][predicted_classes[i]]:.2f})")
-    else:
-        st.write("Please upload a CSV file with numeric data.")
+        else:
+            st.write("Please upload a CSV file with numeric data.")
 
+# Run the app
 run_app()
