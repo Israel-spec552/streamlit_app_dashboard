@@ -7,8 +7,6 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 model_path = 'model.h5'  # Ensure this is the correct relative or absolute path
 model = tf.keras.models.load_model(model_path)
 
-
-
 # Function to preprocess data
 def preprocess_data(data):
     # Convert categorical data to numerical using LabelEncoder
@@ -49,39 +47,39 @@ def run_app():
         if features is None:
             st.write("Please upload a CSV file with numeric data.")
 
-# Make predictions
-if st.button('Predict'):
-    if features is not None:
-        # Convert features to float32
-        features = features.astype(np.float32)
-        predictions = model.predict(features)
+    # Make predictions
+    if st.button('Predict'):
+        if features is not None:
+            # Convert features to float32
+            features = features.astype(np.float32)
+            predictions = model.predict(features)
 
-        # Get the predicted sentiment (index of the maximum probability)
-        predicted_classes = np.argmax(predictions, axis=1)
+            # Get the predicted sentiment (index of the maximum probability)
+            predicted_classes = np.argmax(predictions, axis=1)
 
-        # Map 0 to 'Negative' and 1 to 'Positive'
-        sentiment_map = {0: 'Negative', 1: 'Positive'}
-        predicted_sentiments = [sentiment_map[pred] for pred in predicted_classes]
+            # Map 0 to 'Negative' and 1 to 'Positive'
+            sentiment_map = {0: 'Negative', 1: 'Positive'}
+            predicted_sentiments = [sentiment_map[pred] for pred in predicted_classes]
 
-        # Print the predicted sentiments
-        st.write(f'Predicted Sentiments: {predicted_sentiments}')
+            # Print the predicted sentiments
+            st.write(f'Predicted Sentiments: {predicted_sentiments}')
 
-        # Calculate percentages of Negative and Positive predictions
-        total_predictions = len(predicted_sentiments)
-        negative_count = predicted_sentiments.count('Negative')
-        positive_count = predicted_sentiments.count('Positive')
+            # Calculate percentages of Negative and Positive predictions
+            total_predictions = len(predicted_sentiments)
+            negative_count = predicted_sentiments.count('Negative')
+            positive_count = predicted_sentiments.count('Positive')
 
-        negative_percentage = (negative_count / total_predictions) * 100
-        positive_percentage = (positive_count / total_predictions) * 100
+            negative_percentage = (negative_count / total_predictions) * 100
+            positive_percentage = (positive_count / total_predictions) * 100
 
-        # Print the percentages
-        st.write(f'Negative Sentiment: {negative_percentage:.2f}%')
-        st.write(f'Positive Sentiment: {positive_percentage:.2f}%')
+            # Print the percentages
+            st.write(f'Negative Sentiment: {negative_percentage:.2f}%')
+            st.write(f'Positive Sentiment: {positive_percentage:.2f}%')
 
-        # Print the sentiment with the highest percentage
-        if negative_percentage > positive_percentage:
-            st.write(f'Overall Predicted Sentiment: Negative ({negative_percentage:.2f}%)')
-        else:
-            st.write(f'Overall Predicted Sentiment: Positive ({positive_percentage:.2f}%)')
+            # Print the sentiment with the highest percentage
+            if negative_percentage > positive_percentage:
+                st.write(f'Overall Predicted Sentiment: Negative ({negative_percentage:.2f}%)')
+            else:
+                st.write(f'Overall Predicted Sentiment: Positive ({positive_percentage:.2f}%)')
 
 run_app()
