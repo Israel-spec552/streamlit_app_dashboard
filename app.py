@@ -49,8 +49,8 @@ def run_app():
         if features is None:
             st.write("Please upload a CSV file with numeric data.")
 
-# Make predictions
-if st.button('Predict'):
+ # Make predictions
+ if st.button('Predict'):
     if features is not None:
         # Convert features to float32
         features = features.astype(np.float32)
