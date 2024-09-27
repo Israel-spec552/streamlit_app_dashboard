@@ -70,4 +70,3 @@ def run_app():
         st.write("Please upload a CSV file with numeric data.")
 
 run_app()
-run_app()
