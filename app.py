@@ -29,7 +29,7 @@ def preprocess_data(data):
 
 # Streamlit app code
 def run_app():
-    st.title('TensorFlow/Keras Model Prediction')
+    st.title('Sentiment Prediction Model')
 
     # File uploader for CSV
     uploaded_file = st.file_uploader("Choose a file", type=["csv"])
