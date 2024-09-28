@@ -40,39 +40,28 @@ def run_app():
 
     # Make predictions
     if st.button('Predict'):
-        # Handle CSV predictions
         if features is not None:
             features = features.astype(np.float32)
             predictions = model.predict(features)
             predicted_classes = np.argmax(predictions, axis=1)
-
             sentiment_map = {0: 'Negative', 1: 'Positive'}
             predicted_sentiments = [sentiment_map[pred] for pred in predicted_classes]
             st.write(f'Predictions from uploaded CSV: {predicted_sentiments}')
         
-        # Handle text input predictions
         if user_input:
-            # Tokenize and pad the input text
+            # Preprocess the text input (using tokenizer and padding)
             sequences = tokenizer.texts_to_sequences([user_input])  # Convert text to sequence
-            padded_sequences = pad_sequences(sequences, maxlen=max_length, padding='post')
+            padded_sequences = pad_sequences(sequences, maxlen=100)  # Adjust maxlen as per model training
 
-            # Predict sentiment
+            # Predict sentiment for user-entered text
             user_prediction = model.predict(padded_sequences)
             predicted_class = np.argmax(user_prediction, axis=1)
 
-            # Map prediction to sentiment
             sentiment_map = {0: 'Negative', 1: 'Positive'}
             sentiment = sentiment_map.get(predicted_class[0], 'Unknown')
-            probability = user_prediction[0][predicted_class[0]]
-
-            # Display the sentiment and probability
-            st.write(f"Sentiment for entered text: {sentiment} (Probability: {probability:.2f})")
-            
-            # If sentiment seems incorrect, debug the probabilities
-            st.write(f"Model's raw output: {user_prediction}")
-
+            st.write(f"Sentiment for entered text: {sentiment} (Probability: {user_prediction[0][predicted_class[0]]:.2f})")
         else:
             st.write("Please upload a CSV file or enter text for sentiment analysis.")
 
 # Run the app
-run_app()
+run_app()                       
