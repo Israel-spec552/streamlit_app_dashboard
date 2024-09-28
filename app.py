@@ -4,15 +4,25 @@ import pandas as pd
 import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+import pickle
 
-# Load model and tokenizer
+# Load the model
 model_path = 'model.h5'
 model = tf.keras.models.load_model(model_path)
 
-# Ensure the tokenizer is fitted (this should ideally be done during model training)
-tokenizer = Tokenizer(num_words=5000, oov_token="<OOV>")
-# Assuming you have the word index from training, load it like below:
-# tokenizer.word_index = {'some_word': 1, 'another_word': 2, ...}
+# Load or Initialize Tokenizer
+try:
+    # Load tokenizer (assuming you have saved it previously using pickle)
+    with open('tokenizer.pkl', 'rb') as handle:
+        tokenizer = pickle.load(handle)
+except FileNotFoundError:
+    # If tokenizer file is not found, initialize a new one (ensure it's fitted on proper training data)
+    tokenizer = Tokenizer(num_words=5000, oov_token="<OOV>")
+
+# Function to preprocess data (dummy function, replace with actual logic)
+def preprocess_data(data):
+    # Your preprocessing logic here
+    return data
 
 # Streamlit app code
 def run_app():
@@ -47,32 +57,20 @@ def run_app():
             st.write(f'Predictions from uploaded CSV: {predicted_sentiments}')
 
         if user_input:
-            # Preprocess the text input
+            # Preprocess the text input (using tokenizer and padding)
             sequences = tokenizer.texts_to_sequences([user_input])  # Convert text to sequence
-            
-            # Handle empty or invalid sequences
-            if not sequences or all(len(seq) == 0 for seq in sequences):
-                st.write("Input text could not be processed by the tokenizer.")
-                return
-            
-            # Pad the sequences
-            padded_sequences = pad_sequences(sequences, maxlen=100)  # Adjust `maxlen` as per model training
+            if sequences and sequences[0]:  # Ensure sequences are not empty
+                padded_sequences = pad_sequences(sequences, maxlen=100)  # Adjust `maxlen` as per model training
 
-            # Predict sentiment for user-entered text
-            user_prediction = model.predict(padded_sequences)
-            predicted_class = np.argmax(user_prediction, axis=1)
-            confidence = user_prediction[0][predicted_class[0]]
+                # Predict sentiment for user-entered text
+                user_prediction = model.predict(padded_sequences)
+                predicted_class = np.argmax(user_prediction, axis=1)
 
-            # Set a threshold for prediction confidence (e.g., 60%)
-            threshold = 0.6
-            sentiment_map = {0: 'Negative', 1: 'Positive'}
-
-            if confidence >= threshold:
+                sentiment_map = {0: 'Negative', 1: 'Positive'}
                 sentiment = sentiment_map.get(predicted_class[0], 'Unknown')
+                st.write(f"Sentiment for entered text: {sentiment} (Probability: {user_prediction[0][predicted_class[0]]:.2f})")
             else:
-                sentiment = 'Uncertain'
-
-            st.write(f"Sentiment for entered text: {sentiment} (Probability: {confidence:.2f})")
+                st.write("Could not process input text. Please try again with different text.")
         else:
             st.write("Please upload a CSV file or enter text for sentiment analysis.")
 
