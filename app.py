@@ -2,30 +2,19 @@ import streamlit as st
 import tensorflow as tf
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import LabelEncoder, StandardScaler
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-# Load the model
-model_path = 'model.h5'
-model = tf.keras.models.load_model(model_path)
+# Load the model and tokenizer
+model = tf.keras.models.load_model('model.h5')
+tokenizer = Tokenizer(num_words=5000, oov_token='<OOV>')  # Make sure this matches your training tokenizer
+max_length = 100  # Ensure this is the same as used during training
 
-# Assume the model was trained with a tokenizer
-# Load the tokenizer used during model training (make sure you have it saved)
-tokenizer = Tokenizer(num_words=10000)  # Adjust `num_words` based on your tokenizer
-
-# Function to preprocess data
+# Preprocessing function (for example)
 def preprocess_data(data):
-    # Convert categorical data to numerical using LabelEncoder
-    le = LabelEncoder()
-    for column in data.select_dtypes(include=['object']).columns:
-        data[column] = le.fit_transform(data[column])
-
-    # Normalize the numeric data
-    scaler = StandardScaler()
-    numeric_data = scaler.fit_transform(data.select_dtypes(include=[np.number]))
-
-    return numeric_data
+    # Example preprocessing logic
+    # This should be customized based on your dataset and model requirements
+    return data
 
 # Streamlit app code
 def run_app():
