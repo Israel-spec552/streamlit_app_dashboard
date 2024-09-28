@@ -5,16 +5,17 @@ import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-# Load the model and tokenizer
-model = tf.keras.models.load_model('model.h5')
-tokenizer = Tokenizer(num_words=5000, oov_token='<OOV>')  # Make sure this matches your training tokenizer
-max_length = 100  # Ensure this is the same as used during training
+# Assuming the model and tokenizer are already loaded
+model_path = 'model.h5'
+model = tf.keras.models.load_model(model_path)
 
-# Preprocessing function (for example)
+# Assuming the tokenizer was trained with a vocabulary size of 5000
+tokenizer = Tokenizer(num_words=5000, oov_token="<OOV>")
+
+# Preprocess data
 def preprocess_data(data):
-    # Example preprocessing logic
-    # This should be customized based on your dataset and model requirements
-    return data
+    # Your preprocessing logic here
+    pass
 
 # Streamlit app code
 def run_app():
@@ -47,21 +48,29 @@ def run_app():
             sentiment_map = {0: 'Negative', 1: 'Positive'}
             predicted_sentiments = [sentiment_map[pred] for pred in predicted_classes]
             st.write(f'Predictions from uploaded CSV: {predicted_sentiments}')
-        
+
         if user_input:
             # Preprocess the text input (using tokenizer and padding)
             sequences = tokenizer.texts_to_sequences([user_input])  # Convert text to sequence
-            padded_sequences = pad_sequences(sequences, maxlen=100)  # Adjust maxlen as per model training
+            padded_sequences = pad_sequences(sequences, maxlen=100)  # Adjust `maxlen` as per model training
 
             # Predict sentiment for user-entered text
             user_prediction = model.predict(padded_sequences)
             predicted_class = np.argmax(user_prediction, axis=1)
+            confidence = user_prediction[0][predicted_class[0]]
 
+            # Set a threshold for prediction confidence (e.g., 60%)
+            threshold = 0.6
             sentiment_map = {0: 'Negative', 1: 'Positive'}
-            sentiment = sentiment_map.get(predicted_class[0], 'Unknown')
-            st.write(f"Sentiment for entered text: {sentiment} (Probability: {user_prediction[0][predicted_class[0]]:.2f})")
+
+            if confidence >= threshold:
+                sentiment = sentiment_map.get(predicted_class[0], 'Unknown')
+            else:
+                sentiment = 'Uncertain'
+
+            st.write(f"Sentiment for entered text: {sentiment} (Probability: {confidence:.2f})")
         else:
             st.write("Please upload a CSV file or enter text for sentiment analysis.")
 
 # Run the app
-run_app()                       
+run_app()
