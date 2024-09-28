@@ -41,7 +41,7 @@ def preprocess_user_input(text):
 
 # Streamlit app code
 def run_app():
-    st.title('TensorFlow/Keras Sentiment Prediction')
+    st.title('Sentiment Prediction Model')
 
     # Initialize features to None
     features = None
